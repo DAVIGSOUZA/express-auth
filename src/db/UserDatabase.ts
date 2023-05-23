@@ -4,20 +4,20 @@ import { connectDB } from "./database"
 export class UserDatabase {
   public static TABLE_USERS = 'users'
 
-  public async getAll() {
+  public async getAll(): Promise<UserDB[]> {
     return await connectDB(UserDatabase.TABLE_USERS)
   }
 
-  public async getUserByName(name: string) {
+  public async getUserByName(name: string): Promise<UserDB[]> {
     return await connectDB(UserDatabase.TABLE_USERS)
       .where('name', 'LIKE', `%${name}%`)
   }
 
-  public async getUserById(id: string) {
+  public async getUserById(id: string): Promise<UserDB[]> {
     return await connectDB(UserDatabase.TABLE_USERS).where({id})
   }
 
-  public async getUserByEmail(email: string) {
+  public async getUserByEmail(email: string): Promise<UserDB[]> {
     return await connectDB(UserDatabase.TABLE_USERS).where({email})
   }
 
