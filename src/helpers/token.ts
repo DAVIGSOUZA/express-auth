@@ -1,7 +1,13 @@
 import jwt, { JwtPayload } from "jsonwebtoken"
 import { enviroments } from "./enviroments"
 
-export const createToken = (payload: string | object) => {
+export type TokenPayload = {
+  id: string
+  name: string
+  role: string
+}
+
+export const createToken = (payload: TokenPayload) => {
   const token = jwt.sign(
     payload,
     enviroments.jwt.key,
@@ -11,9 +17,9 @@ export const createToken = (payload: string | object) => {
   return token
 }
 
-export const getTokenPayload = (token:string): string | JwtPayload | null => {
+export const getTokenPayload = (token:string): TokenPayload | null => {
   try {
-    return jwt.verify(token, enviroments.jwt.key)
+    return jwt.verify(token, enviroments.jwt.key) as JwtPayload & TokenPayload
   } 
   
   catch (error) {
