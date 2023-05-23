@@ -2,13 +2,25 @@ import { Router } from 'express'
 import { UserController } from '../controller/UserController'
 import { UserBusiness } from '../business/UserBusiness'
 import { UserDatabase } from '../db/UserDatabase'
+import { PostController } from '../controller/PostController'
+import { PostBusiness } from '../business/PostBusiness'
+import { PostDatabase } from '../db/PostDatabase'
 
 export const router = Router()
 
-const { signup } = new UserController(
+const { signup, signin } = new UserController(
   new UserBusiness(
     new UserDatabase()
   )
 )
 
+const { getPosts, createPost } = new PostController(
+  new PostBusiness(
+    new PostDatabase()
+  )
+)
+
 router.post('/signup', signup)
+router.post('/signin', signin)
+router.get('/posts', getPosts)
+router.post('/posts', createPost)
