@@ -1,9 +1,10 @@
 import { UserDatabase } from "../db/UserDatabase";
+import { SigninInputDTO } from "../dto/signin.dto";
 import { SignupInputDTO } from "../dto/signup.dto";
 import { AppError } from "../error/AppError";
-import { encrypt } from "../helpers/encryption";
+import { compareHash, encrypt } from "../helpers/encryption";
 import { generateId } from "../helpers/generatedId";
-import { createToken } from "../helpers/token";
+import { TokenPayload, createToken } from "../helpers/token";
 
 export class UserBusiness {
   constructor (
@@ -31,7 +32,7 @@ export class UserBusiness {
       password: hashedPassword
     })
 
-    const tokenPayload = {
+    const tokenPayload:TokenPayload = {
       id: newUser.id,
       name: newUser.name,
       role: newUser.role
@@ -41,6 +42,34 @@ export class UserBusiness {
 
     return {
       message: 'Cadastro realizado com sucesso',
+      token
+    }
+  }
+
+  public signin = async (input: SigninInputDTO) => {
+    const { email, password } = input
+    
+    const [user] = await this.userDatabase.getUserByEmail(email)
+
+    if (!user) {
+      throw new AppError(400, 'Senha inválida ou usuário não existe')
+    }
+    
+    const comparedHash = await compareHash(password, user.password)
+    
+    if (!comparedHash) {
+      throw new AppError(400, 'Senha inválida ou usuário não existe')
+    }
+
+    const tokenPayload = {
+      id: user.id,
+      name: user.name,
+      role: user.role
+    }
+
+    const token = createToken(tokenPayload)
+
+    return {
       token
     }
   }
