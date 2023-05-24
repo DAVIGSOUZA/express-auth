@@ -8,6 +8,11 @@ export type PostDB = {
   updated_at: string
 }
 
+export type EditedPost = {
+  id: string
+  content: string
+}
+
 export type PostMinimal = {
   id: string
   creator_id: string

@@ -2,7 +2,7 @@ import jwt, { JwtPayload } from "jsonwebtoken"
 import { enviroments } from "./enviroments"
 
 export type TokenPayload = {
-  id: string
+  userId: string
   name: string
   role: string
 }
@@ -19,7 +19,15 @@ export const createToken = (payload: TokenPayload) => {
 
 export const getTokenPayload = (token:string): TokenPayload | null => {
   try {
-    return jwt.verify(token, enviroments.jwt.key) as JwtPayload & TokenPayload
+    const payload = jwt.verify(token, enviroments.jwt.key) as JwtPayload & TokenPayload
+
+    const dateNow = new Date()
+    
+    if (payload.exp < dateNow.getTime()/1000) {
+      return null
+    }
+
+    return payload
   } 
   
   catch (error) {

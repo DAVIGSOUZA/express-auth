@@ -33,7 +33,7 @@ export class UserBusiness {
     })
 
     const tokenPayload:TokenPayload = {
-      id: newUser.id,
+      userId: newUser.id,
       name: newUser.name,
       role: newUser.role
     }
@@ -61,13 +61,11 @@ export class UserBusiness {
       throw new AppError(400, 'Senha inválida ou usuário não existe')
     }
 
-    const tokenPayload = {
-      id: user.id,
+    const token = createToken({
+      userId: user.id,
       name: user.name,
       role: user.role
-    }
-
-    const token = createToken(tokenPayload)
+    })
 
     return {
       token

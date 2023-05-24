@@ -6,6 +6,9 @@ export const catchError = (res: Response, error: Error) => {
   console.log(error)
 
   if (error instanceof AppError) {
+    if (error.message === '') {
+      return res.sendStatus(error.statusCode)
+    }
     return res.status(error.statusCode).send(error.message)
   }
 

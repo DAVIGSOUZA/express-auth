@@ -14,7 +14,7 @@ const { signup, signin } = new UserController(
   )
 )
 
-const { getPosts, createPost } = new PostController(
+const { getPosts, createPost, editPost } = new PostController(
   new PostBusiness(
     new PostDatabase()
   )
@@ -24,3 +24,4 @@ router.post('/signup', signup)
 router.post('/signin', signin)
 router.get('/posts', getPosts)
 router.post('/posts', createPost)
+router.put('/posts/:postId', editPost)
