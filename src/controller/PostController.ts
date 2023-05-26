@@ -3,12 +3,26 @@ import { PostBusiness } from "../business/PostBusiness";
 import { GetPostsSchema } from "../dto/getPosts.dto";
 import { CreatePostSchema } from "../dto/createPost.dto";
 import { EditPostSchema } from "../dto/editPost.dto";
+import { DeletePostSchema } from "../dto/deletePost.dto";
+import { LikeSchema } from "../dto/likePost.dto";
 import { catchError } from "../error/catchError";
 
 export class PostController {
   constructor(
     private postBusiness: PostBusiness
   ){}
+
+  public getPosts = async (req:Request, res:Response) => {
+    try {
+      const input = GetPostsSchema.parse({token: req.headers.authorization})
+
+      const output = await this.postBusiness.getPosts(input)
+
+      res.status(200).send(output)
+    } catch (error) {
+      catchError(res, error)
+    }
+  }
 
   public createPost = async (req:Request, res:Response) => {
     try {
@@ -25,7 +39,7 @@ export class PostController {
     }
   }
 
-  public editPost =async (req:Request, res: Response) => {
+  public editPost = async (req:Request, res: Response) => {
     try {
       const input = EditPostSchema.parse({
         postId: req.params.postId,
@@ -41,13 +55,32 @@ export class PostController {
     }
   }
 
-  public getPosts = async (req:Request, res:Response) => {
+  public likePost = async (req:Request, res:Response) => {
     try {
-      const input = GetPostsSchema.parse({token: req.headers.authorization})
+      const input = LikeSchema.parse({
+        postId: req.params.postId,
+        token: req.headers.authorization,
+        like: req.body.like
+      })
 
-      const output = await this.postBusiness.getPosts(input)
+      const output = await this.postBusiness.likePost(input)
 
       res.status(200).send(output)
+    } catch (error) {
+      catchError(res, error)
+    }
+  }
+
+  public deletePost = async (req:Request, res:Response) => {
+    try {
+      const input = DeletePostSchema.parse({
+        postId: req.params.postId,
+        token: req.headers.authorization
+      })
+
+      await this.postBusiness.deletePost(input)
+
+      res.status(200).send({success: true})
     } catch (error) {
       catchError(res, error)
     }

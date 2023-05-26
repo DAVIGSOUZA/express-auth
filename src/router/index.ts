@@ -14,7 +14,7 @@ const { signup, signin } = new UserController(
   )
 )
 
-const { getPosts, createPost, editPost } = new PostController(
+const { getPosts, createPost, editPost, deletePost, likePost } = new PostController(
   new PostBusiness(
     new PostDatabase()
   )
@@ -25,3 +25,5 @@ router.post('/signin', signin)
 router.get('/posts', getPosts)
 router.post('/posts', createPost)
 router.put('/posts/:postId', editPost)
+router.delete('/posts/:postId', deletePost)
+router.put('/posts/:postId/like', likePost)

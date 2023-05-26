@@ -18,3 +18,11 @@ export type PostMinimal = {
   creator_id: string
   content: string
 }
+
+export type LikedPost = {
+  post_id: string
+  user_id: string
+  like: boolean
+}
+
+export type DeleteLikedPost = Omit<LikedPost, 'like'>
